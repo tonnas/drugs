@@ -71,7 +71,6 @@ class CategorizedDrugsCrawler:
                             pprint('H {} => {}'.format(headers1[x], str(cell_value)))
                         else:
                             pprint('V {} => {}'.format(headers2[x], str(cell_value)))
-                print('###################################################')
                 if y >= 10:
                     break
 
