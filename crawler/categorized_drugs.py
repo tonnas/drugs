@@ -3,9 +3,11 @@ import requests
 import unidecode
 from os import path
 from pprint import pprint
+from base import BaseClass
+from datetime import datetime
 
 
-class CategorizedDrugsCrawler:
+class CategorizedDrugsCrawler(BaseClass):
     CONDITIONAL = 'Podmienena'
     TEMPORARY = 'Docasna'
     UHR_SPEC = 'UhrSpec'
@@ -14,6 +16,7 @@ class CategorizedDrugsCrawler:
     UHR_SPEC_CATEGORY = 'UhrSpecSkupina'
 
     def __init__(self):
+        super().__init__()
         self.file_name = path.abspath(path.join(__file__, '../../data/development_data.xls'))
 
     def run(self):
@@ -28,6 +31,7 @@ class CategorizedDrugsCrawler:
             print('File Not found: {}'.format(self.file_name))
         except Exception as e:
             print('File Error: {}'.format(repr(e)))
+
         if workbook:
             sheet = workbook.sheet_by_index(0)
             headers1 = {}
@@ -35,7 +39,11 @@ class CategorizedDrugsCrawler:
             conditional = None
             temporary = None
             uhr_spec = None
+            indication_restriction_id = None
             for y in range(sheet.nrows):  # y for rows
+                drug_doc = {}
+                indication_restriction_doc = {}
+                row_type = None
                 for x in range(sheet.ncols):  # x for columns
                     cell_value = sheet.cell_value(y, x)
                     if y == 0:  # first row
@@ -68,15 +76,33 @@ class CategorizedDrugsCrawler:
                     font = workbook.font_list[fmt.font_index]
                     if cell_value:
                         if font.bold == 1:
-                            pprint('H {} => {}'.format(headers1[x], str(cell_value)))
+                            row_type = 'ir'
+                            indication_restriction_doc[headers1[x]] = str(cell_value)
                         else:
-                            pprint('V {} => {}'.format(headers2[x], str(cell_value)))
-                if y >= 10:
-                    break
+                            row_type = 'd'
+                            drug_doc[headers2[x]] = str(cell_value)
+                    # columns end
 
-            # pprint(headers1)
-            # pprint(headers2)
-            quit()
+                if not row_type:
+                    continue
+
+                if row_type == 'ir':
+                    indication_restriction_id = self.get_ir_id(indication_restriction_doc)
+                    continue
+
+                if row_type == 'd':
+                    drug_doc['indication_restriction_id'] = indication_restriction_id
+                    drug_doc['checked_at'] = datetime.now()
+                    self.mongo.drugs.update({'Kod': drug_doc['Kod']}, drug_doc, True)
+
+    def get_ir_id(self, doc):
+        ir_doc = self.mongo.indication_restriction.find_one(doc)
+        if ir_doc and '_id' in ir_doc:
+            return ir_doc['_id']
+
+        doc['created_at'] = datetime.now()
+        ir_doc = self.mongo.indication_restriction.insert_one(doc)
+        return ir_doc.inserted_id
 
     @staticmethod
     def camel_case(cell_value):
