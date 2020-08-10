@@ -2,6 +2,7 @@ import datetime
 from bson.codec_options import CodecOptions
 from model.collections import Drugs
 from model.collections.indication_restriction import IndicationRestriction
+from model.collections.atc_group import AtcGroup
 
 
 class Repository(object):
@@ -17,6 +18,10 @@ class Repository(object):
     @property
     def indication_restriction(self):
         return self._get_repo(IndicationRestriction)
+
+    @property
+    def atc_group(self):
+        return self._get_repo(AtcGroup)
 
     def _get_repo(self, coll):
         if coll not in self._collections:
