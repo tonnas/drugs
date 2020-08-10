@@ -11,23 +11,29 @@ class IndicationRestrictionRTF(BaseClass):
 
     def __init__(self):
         super().__init__()
-        self.file_name = path.abspath(path.join(__file__, '../../data/restrictions.pdf'))
+        self.file_name = path.abspath(path.join(__file__, '../../data/restrictions.txt'))
 
     def run(self):
         self.read_data_from_file()
 
     def read_data_from_file(self):
-        pdfFileObj = None
+        lines = None
         try:
-            pdfFileObj = open(self.file_name, 'rb')
+            with open(self.file_name) as file_in:
+                lines = []
+                for line in file_in:
+                    lines.append(line)
         except FileNotFoundError as fe:
             print('File Not found: {}'.format(self.file_name))
         except Exception as e:
             print('File Error: {}'.format(repr(e)))
 
-        if pdfFileObj:
-            pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-            print(pdfReader.numPages)
-            pageObj = pdfReader.getPage(0)
-            print(pageObj.extractText().encode('utf-8', "replace").encode('ascii'))
-            pdfFileObj.close()
+        i = 0
+        for line in lines:
+            i = i + 1
+            # if i <= 8:
+            #     continue
+            #
+            # pprint(line.strip())
+            # if i > 20:
+            #     break
