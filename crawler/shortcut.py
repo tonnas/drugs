@@ -1,15 +1,14 @@
 import xlrd
-import requests
 from os import path
 from base import BaseClass
 from datetime import datetime
 
 
-class AtcGroup(BaseClass):
+class Shortcut(BaseClass):
 
     def __init__(self):
         super().__init__()
-        self.file_name = path.abspath(path.join(__file__, '../../data/atc_group.xls'))
+        self.file_name = path.abspath(path.join(__file__, '../../data/shortcuts.xls'))
 
     def run(self):
         self.read_data_from_file()
@@ -31,17 +30,9 @@ class AtcGroup(BaseClass):
                 cell_name = sheet.cell_value(y, 1)
 
                 if cell_code and cell_name:
-                    if len(cell_code) == 1:
-                        group = {
-                            'code': cell_code,
-                            'name': cell_name
-                        }
-                        continue
                     doc = {
-                        'group_code': group['code'],
-                        'group_name': group['name'],
-                        'code': cell_code,
-                        'name': cell_name,
+                        'shortcut': cell_code,
+                        'text': cell_name,
                         'checked_at': datetime.now()
                     }
-                    self.mongo.atc_group.update({'code': doc['code']}, doc, True)
+                    self.mongo.shortcut.update({'shortcut': doc['shortcut']}, doc, True)

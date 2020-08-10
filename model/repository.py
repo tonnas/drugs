@@ -3,6 +3,7 @@ from bson.codec_options import CodecOptions
 from model.collections import Drugs
 from model.collections.indication_restriction import IndicationRestriction
 from model.collections.atc_group import AtcGroup
+from model.collections.shortcut import Shortcut
 
 
 class Repository(object):
@@ -22,6 +23,10 @@ class Repository(object):
     @property
     def atc_group(self):
         return self._get_repo(AtcGroup)
+
+    @property
+    def shortcut(self):
+        return self._get_repo(Shortcut)
 
     def _get_repo(self, coll):
         if coll not in self._collections:
