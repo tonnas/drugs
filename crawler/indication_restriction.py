@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from base import BaseClass
-from pprint import pprint
 from os import path
-import PyPDF2
 
 
 class IndicationRestrictionRTF(BaseClass):

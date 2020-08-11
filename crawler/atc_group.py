@@ -1,5 +1,4 @@
 import xlrd
-import requests
 from os import path
 from base import BaseClass
 from datetime import datetime

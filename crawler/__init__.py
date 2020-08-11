@@ -3,3 +3,4 @@ from .indication_restriction import IndicationRestrictionRTF
 from .atc_group import AtcGroup
 from .shortcut import Shortcut
 from .states import States
+from .manufacturer import Manufacturer
