@@ -93,6 +93,7 @@ class CategorizedDrugsCrawler(BaseClass):
                 if row_type == 'd':
                     drug_doc['indication_restriction_id'] = indication_restriction_id
                     drug_doc['checked_at'] = datetime.now()
+                    drug_doc['source'] = 'health.gov.sk'
                     self.mongo.drugs.update({'Kod': drug_doc['Kod']}, drug_doc, True)
 
     def get_ir_id(self, doc):

@@ -24,7 +24,6 @@ class Shortcut(BaseClass):
 
         if workbook:
             sheet = workbook.sheet_by_index(0)
-            group = {}
             for y in range(sheet.nrows):  # y for rows
                 cell_code = sheet.cell_value(y, 0)
                 cell_name = sheet.cell_value(y, 1)
@@ -33,6 +32,7 @@ class Shortcut(BaseClass):
                     doc = {
                         'shortcut': cell_code,
                         'text': cell_name,
-                        'checked_at': datetime.now()
+                        'checked_at': datetime.now(),
+                        'source': 'health.gov.sk'
                     }
                     self.mongo.shortcut.update({'shortcut': doc['shortcut']}, doc, True)

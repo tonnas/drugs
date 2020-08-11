@@ -42,6 +42,7 @@ class AtcGroup(BaseClass):
                         'group_name': group['name'],
                         'code': cell_code,
                         'name': cell_name,
-                        'checked_at': datetime.now()
+                        'checked_at': datetime.now(),
+                        'source': 'health.gov.sk'
                     }
                     self.mongo.atc_group.update({'code': doc['code']}, doc, True)
