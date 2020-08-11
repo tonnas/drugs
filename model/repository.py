@@ -4,6 +4,7 @@ from model.collections import Drugs
 from model.collections.indication_restriction import IndicationRestriction
 from model.collections.atc_group import AtcGroup
 from model.collections.shortcut import Shortcut
+from model.collections.state import State
 
 
 class Repository(object):
@@ -27,6 +28,10 @@ class Repository(object):
     @property
     def shortcut(self):
         return self._get_repo(Shortcut)
+
+    @property
+    def state(self):
+        return self._get_repo(State)
 
     def _get_repo(self, coll):
         if coll not in self._collections:
