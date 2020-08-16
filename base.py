@@ -20,4 +20,3 @@ class BaseClass:
             return dict(self.config.items(section))
 
         return None
-
